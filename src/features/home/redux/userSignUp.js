@@ -36,7 +36,7 @@ export function userSignUp(userInfo) {
         (err) => {
           dispatch({
             type: HOME_USER_SIGN_UP_FAILURE,
-            data: { error: err },
+            data: { error: err.response.data },
           });
           reject(err);
         },

@@ -52,11 +52,8 @@ export class LoginModal extends Component {
 
   };
 
-  handleSubmit =(values, formikBag) => {
+  handleSubmit =(values) => {
     this.props.actions.userSignUp(values);
-      // .resolve(this.props.handleClose())
-      // .reject(() => {});
-    // formikBag.resetForm();
   };
 
   handleClose = () => {
