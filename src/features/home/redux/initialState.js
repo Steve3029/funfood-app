@@ -4,6 +4,7 @@ const initialState = {
   userSignUpError: null,
   userSignInPending: false,
   userSignInError: null,
+  auth_user: null,
 };
 
 export default initialState;

@@ -44,16 +44,12 @@ export class LoginModal extends Component {
     actions: PropTypes.object.isRequired,
   };
 
-  handleSignUp = () => {
-
-  };
-
-  handleSignIn = () => {
-
-  };
-
-  handleSubmit =(values) => {
+  handleSignUp = (values) => {
     this.props.actions.userSignUp(values);
+  };
+
+  handleSignIn = (values) => {
+
   };
 
   handleClose = () => {
@@ -91,7 +87,7 @@ export class LoginModal extends Component {
               </div>)
             }
             <Formik 
-              onSubmit={this.handleSubmit}
+              onSubmit={modalType==="signup" ? this.handleSignUp : this.handleSignIn}
               validationSchema={validationSchema} 
               render={props => (<FormGenerator type={modalType==="signup" ? "signup" : "signin"} {...props} />)}
             />

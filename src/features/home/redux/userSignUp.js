@@ -28,8 +28,9 @@ export function userSignUp(userInfo) {
         (res) => {
           dispatch({
             type: HOME_USER_SIGN_UP_SUCCESS,
-            data: res,
+            data: res.data,
           });
+          localStorage.setItem('funfood-token', res.data.token);
           resolve(res);
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.
@@ -71,6 +72,11 @@ export function reducer(state, action) {
         ...state,
         isSignIn: true,
         userSignUpError: null,
+        auth_user: {
+          id: action.data.id,
+          userName: action.data.userName,
+          email: action.data.email,
+        }
       };
 
     case HOME_USER_SIGN_UP_FAILURE:
