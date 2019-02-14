@@ -10,6 +10,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { Identity } from './';
+import { PersonalSettingsMenu } from './';
 
 const styles = theme => ({
   root: {
@@ -108,7 +109,7 @@ export class Header extends Component {
             </div>
             <div className={classes.grow} />
             <div className="">
-              {this.props.home.isSignIn ? "" : <Identity />}
+              {this.props.home.isSignIn ? <PersonalSettingsMenu /> : <Identity />}
             </div>
           </Toolbar>
         </AppBar>

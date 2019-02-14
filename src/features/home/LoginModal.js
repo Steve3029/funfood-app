@@ -11,9 +11,18 @@ import { Formik } from 'formik';
 import FormGenerator from './FormGenerator';
 
 // sign up validation schema
-const validationSchema = yup.object().shape({
+const signUpValidationSchema = yup.object().shape({
   username: yup.string()
     .required('Username is required!'),
+  email: yup.string()
+    .email('Email is not valid!')
+    .required('Email is required as your unique account!'),
+  password: yup.string()
+    .min(6, 'Password has to be longer than 6 characters!')
+    .required('Password is required!')
+});
+
+const signInValidationSchema = yup.object().shape({
   email: yup.string()
     .email('Email is not valid!')
     .required('Email is required as your unique account!'),
@@ -49,24 +58,36 @@ export class LoginModal extends Component {
   };
 
   handleSignIn = (values) => {
-
+    this.props.actions.userSignIn(values);
   };
 
   handleClose = () => {
     this.props.handleClose();
     this.props.actions.dismissUserSignUpError();
+    this.props.actions.dismissUserSignInError();
   };
 
   render() {
-    const { 
+    const {
       openModal, // control modal hidding or display
-      onSuccess, // callback function
       modalType, // indicates what type of dialog will be rendered: sign up or sign in 
-      classes 
+      classes
     } = this.props;
 
+    const errorMessage = modalType === "signup" ?
+      this.props.home.userSignUpError :
+      this.props.home.userSignInError;
+
+    const handleSubmit = modalType === "signup" ? 
+      this.handleSignUp : 
+      this.handleSignIn;
+
+    const validationSchema = modalType === "signup" ? 
+      signUpValidationSchema : 
+      signInValidationSchema;
+
     return (
-      <Dialog 
+      <Dialog
         onClose={this.handleClose}
         aria-labelledby="customized-dialog-title"
         open={openModal}
@@ -74,22 +95,23 @@ export class LoginModal extends Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleClose} />
         <DialogContent className={classes.paperWidthSm} >
           <div>
-            {this.props.home.userSignUpError && 
+            {(this.props.home.userSignUpError || this.props.home.userSignInError)
+              &&
               (<div className={classes.formErrorContainer}>
-                <FormHelperText 
-                  id="form-error-message" 
-                  variant="filled" 
-                  margin="dense" 
+                <FormHelperText
+                  id="form-error-message"
+                  variant="filled"
+                  margin="dense"
                   className={classes.root}
                 >
-                  {this.props.home.userSignUpError}
+                  {errorMessage}
                 </FormHelperText>
               </div>)
             }
-            <Formik 
-              onSubmit={modalType==="signup" ? this.handleSignUp : this.handleSignIn}
-              validationSchema={validationSchema} 
-              render={props => (<FormGenerator type={modalType==="signup" ? "signup" : "signin"} {...props} />)}
+            <Formik
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+              render={props => (<FormGenerator type={modalType} {...props} />)}
             />
           </div>
         </DialogContent>
