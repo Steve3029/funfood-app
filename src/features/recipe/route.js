@@ -3,12 +3,13 @@
 
 import {
   DefaultPage,
+  EditRecipe,
 } from './';
 
 export default {
   path: 'recipe',
   name: 'Recipe',
   childRoutes: [
-    { path: 'default-page', name: 'Default page', component: DefaultPage, isIndex: true },
+    { path: 'default-page', name: 'Default page', component: EditRecipe, isIndex: true },
   ],
 };

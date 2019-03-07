@@ -20,6 +20,7 @@ function formGenerator(props) {
       type="text" 
       variant="outlined" 
       fullWidth 
+      required 
       onChange={props.handleChange} 
       onBlur={props.handleBlur} 
       value={props.values.username} 
@@ -43,6 +44,7 @@ function formGenerator(props) {
         type="email"  
         variant="outlined"
         fullWidth 
+        required 
         onChange={props.handleChange} 
         onBlur={props.handleBlur} 
         value={props.values.email} 
@@ -66,6 +68,7 @@ function formGenerator(props) {
         type="password" 
         variant="outlined" 
         fullWidth 
+        required 
         onChange={props.handleChange} 
         onBlur={props.handleBlur} 
         value={props.values.password} 
