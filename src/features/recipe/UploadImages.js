@@ -6,6 +6,7 @@ import green from '@material-ui/core/colors/green';
 import AddAPhoto from '@material-ui/icons/AddAPhoto';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import classNames from 'classnames';
+import Snackbar from '@material-ui/core/Snackbar';
 import { string } from 'prop-types';
 
 const styles = theme => ({
@@ -39,6 +40,12 @@ const styles = theme => ({
     maxWidth: 834,
     maxHeight: 834,
     padding: 2,
+  },
+  snackbar: {
+    position: 'absolute',
+  },
+  snackbarContent: {
+    backgroundColor: theme.palette.error.dark,
   }
 });
 
@@ -48,7 +55,7 @@ function UploadButton(props) {
     <div>
       <InputLabel htmlFor="single">
         <AddAPhoto className={classNames(classes.bigIcon, classes.iconCursor)} />
-        <p>Add a Phone</p>
+        <p>Add a Photo</p>
       </InputLabel>
       <input hidden type="file" id="single" onChange={onChange} />
     </div>
@@ -79,6 +86,8 @@ class UploadImages extends Component {
     this.state = {
       uploading: false,
       removing: false,
+      open: false,
+      error: "",
       image: null
     }
   }
@@ -88,13 +97,21 @@ class UploadImages extends Component {
     const file = Array.from(event.target.files);
     // multiple images upload is not allowed
     if (file.length > 1) {
-      errs.push("Only 1 image can be uploaded at a time.");
+      this.setState({
+        error: "Only 1 image can be uploaded at a time.",
+        open: true,
+      });
+      return;
     }
     const image = file[0];
     // only support png, jpeg, gif image
     const types = ['image/png', 'image/jpeg', 'image/gif'];
     if (types.every(type => image.type !== type)) {
-      errs.push(`${image.type} is not a support format.`)
+      this.setState({
+        error: `${image.type} is not a support format.`,
+        open: true,
+      });
+      return;
     }
 
     // the size of image is limited
@@ -132,9 +149,7 @@ class UploadImages extends Component {
     if (id == null || id === "")
       return;
     
-    id = encodeURIComponent(id);
     const requestPath = "https://localhost:5001/api/v1/images/destroy?desc=" + id;
-    console.log(requestPath);
     const doRequest = axios.get(requestPath);
     this.setState({ removing: true });
     doRequest.then(
@@ -154,8 +169,15 @@ class UploadImages extends Component {
     );
   }
 
+  handleNoticeClose = () => {
+    this.setState({ 
+      open: false,
+      error: "",
+    });
+  };
+
   render() {
-    const { uploading, removing, image } = this.state;
+    const { uploading, removing, image, error, open } = this.state;
     const { classes } = this.props;
     const content = () => {
       switch(true) {
@@ -172,6 +194,17 @@ class UploadImages extends Component {
     return (
       <div className={classes.root}>
         {content()}
+        <Snackbar
+            open={open}
+            autoHideDuration={4000}
+            onClose={this.handleNoticeClose}
+            ContentProps={{
+              'aria-describedby': 'snackbar-fab-message-id',
+              className: classes.snackbarContent,
+            }}
+            message={<span id="snackbar-fab-message-id">{error}</span>}
+            className={classes.snackbar}
+          />
       </div>
     );
   }
