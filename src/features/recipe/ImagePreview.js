@@ -31,8 +31,8 @@ function ImagePreview(props) {
 }
 
 ImagePreview.propTypes = {
-  removeImage: PropTypes.func,
-  image: PropTypes.object,
+  removeImage: PropTypes.func.isRequired,
+  image: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ImagePreview);

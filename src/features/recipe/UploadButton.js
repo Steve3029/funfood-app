@@ -26,7 +26,7 @@ function UploadButton(props) {
 }
 
 UploadButton.propTypes = {
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(UploadButton);
