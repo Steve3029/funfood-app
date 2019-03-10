@@ -1,24 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { InputLabel, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import AddAPhoto from '@material-ui/icons/AddAPhoto';
-import HighlightOff from '@material-ui/icons/HighlightOff';
-import classNames from 'classnames';
 import Snackbar from '@material-ui/core/Snackbar';
-import PropTypes from 'prop-types';
+import ImagePreview from './ImagePreview';
+import UploadButton from './UploadButton';
 
 const styles = theme => ({
-  bigIcon: {
-    fontSize: 128,
-  },
-  normalIcon: {
-    fontSize: 32,
-  },
-  iconCursor: {
-    cursor: "pointer",
-  },
   root: {
     width: "100%",
     border: "1px solid",
@@ -30,17 +19,6 @@ const styles = theme => ({
     color: green[500],
     marginTop: 61,
   },
-  delete: {
-    position: "relative",
-    top: 5,
-    left: 5,
-    float: "left",
-  },
-  img: {
-    maxWidth: 834,
-    maxHeight: 834,
-    padding: 2,
-  },
   snackbar: {
     position: 'absolute',
   },
@@ -48,42 +26,6 @@ const styles = theme => ({
     backgroundColor: theme.palette.error.dark,
   }
 });
-
-function UploadButton(props) {
-  const { classes, onChange } = props;
-  return (
-    <div>
-      <InputLabel htmlFor="single">
-        <AddAPhoto className={classNames(classes.bigIcon, classes.iconCursor)} />
-        <p>Add a Photo</p>
-      </InputLabel>
-      <input hidden type="file" id="single" onChange={onChange} />
-    </div>
-  );
-}
-
-UploadButton.propTypes = {
-  onChange: PropTypes.func,
-}
-
-function ImagePreview (props) {
-  const { classes, removeImage, image } = props;
-  return (
-    <div>
-      <div className={classes.delete} 
-        onClick={() => removeImage(image.public_id)}
-      >
-        <HighlightOff className={classes.normalIcon} color="secondary" />
-      </div>
-      <img className={classes.img} src={image.secure_url} alt=""/>
-    </div>
-  );
-}
-
-ImagePreview.propTypes = {
-  removeImage: PropTypes.func,
-  image: PropTypes.object,
-}
 
 // Messages of image format errors
 const imageQuantityError = "Only 1 image can be uploaded at a time.";
@@ -136,7 +78,6 @@ class UploadImages extends Component {
       return;
     }
 
-    
     const formData = new FormData();
     formData.append("image", image);
     this.setState({ uploading: true });
