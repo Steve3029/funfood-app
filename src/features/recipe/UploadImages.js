@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { InputLabel, CircularProgress, FormHelperText } from '@material-ui/core';
+import { InputLabel, CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import AddAPhoto from '@material-ui/icons/AddAPhoto';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import classNames from 'classnames';
 import Snackbar from '@material-ui/core/Snackbar';
-import { string } from 'prop-types';
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
   bigIcon: {
@@ -62,6 +62,10 @@ function UploadButton(props) {
   );
 }
 
+UploadButton.propTypes = {
+  onChange: PropTypes.func,
+}
+
 function ImagePreview (props) {
   const { classes, removeImage, image } = props;
   return (
@@ -75,6 +79,16 @@ function ImagePreview (props) {
     </div>
   );
 }
+
+ImagePreview.propTypes = {
+  removeImage: PropTypes.func,
+  image: PropTypes.object,
+}
+
+// Messages of image format errors
+const imageQuantityError = "Only 1 image can be uploaded at a time.";
+const imageFormatError = "The types of image that can be supported only include GIF, PNG and JPG.";
+const imageSizeError = "The size of the image is too large, please pick a smaller image";
 
 class UploadImages extends Component {
   static propTypes = {
@@ -92,57 +106,52 @@ class UploadImages extends Component {
     }
   }
 
+  showErrorMessage = (errorMsg) => {
+    this.setState({
+      error: errorMsg,
+      open: true,
+    })
+  }
+
   onChange = event => {
-    const errs = [];
     const file = Array.from(event.target.files);
     // multiple images upload is not allowed
     if (file.length > 1) {
-      this.setState({
-        error: "Only 1 image can be uploaded at a time.",
-        open: true,
-      });
+      this.showErrorMessage(imageQuantityError);
       return;
     }
     const image = file[0];
     // only support png, jpeg, gif image
     const types = ['image/png', 'image/jpeg', 'image/gif'];
     if (types.every(type => image.type !== type)) {
-      this.setState({
-        error: `${image.type} is not a support format.`,
-        open: true,
-      });
+      this.showErrorMessage(imageFormatError);
       return;
     }
 
     // the size of image is limited
     if (image.size > 150000) {
-      errs.push(`${image.name} is too large, please pick a smaller image`);
+      this.showErrorMessage(imageSizeError);
+      return;
     }
 
-    // if errors is not empty popup errors info
-    if (errs.length > 0) {
-      // popup errors info
-    } else {
-      const formData = new FormData();
-      formData.append("image", image);
-      this.setState({ uploading: true });
-      const doRequest = axios.post("https://localhost:5001/api/v1/images/upload", formData);
-      doRequest.then(
-        (res) => {
-          this.setState({ 
-            uploading: false,
-            image: res.data,
-           });
-        },
+    
+    const formData = new FormData();
+    formData.append("image", image);
+    this.setState({ uploading: true });
+    const doRequest = axios.post("https://localhost:5001/api/v1/images/upload", formData);
+    doRequest.then(
+      (res) => {
+        this.setState({ 
+          uploading: false,
+          image: res.data,
+          });
+      },
 
-        (err) => {
-          this.setState({ uploading: false });
-          // popup err message
-
-        }
-      );
-
-    }
+      (err) => {
+        this.setState({ uploading: false });
+        this.showErrorMessage(err.response.data);
+      }
+    );
   }
 
   removeImage = id => {
@@ -164,7 +173,7 @@ class UploadImages extends Component {
         this.setState({
           removing: false
         });
-        // popup error message
+        this.showErrorMessage(errs.response.data);
       }
     );
   }
