@@ -89,6 +89,8 @@ ImagePreview.propTypes = {
 const imageQuantityError = "Only 1 image can be uploaded at a time.";
 const imageFormatError = "The types of image that can be supported only include GIF, PNG and JPG.";
 const imageSizeError = "The size of the image is too large, please pick a smaller image";
+const imageUploadError = "Uploading of image has failed.";
+const imageRemoveError = "Removing of image has failed.";
 
 class UploadImages extends Component {
   static propTypes = {
@@ -149,7 +151,7 @@ class UploadImages extends Component {
 
       (err) => {
         this.setState({ uploading: false });
-        this.showErrorMessage(err.response.data);
+        this.showErrorMessage(imageUploadError);
       }
     );
   }
@@ -173,7 +175,7 @@ class UploadImages extends Component {
         this.setState({
           removing: false
         });
-        this.showErrorMessage(errs.response.data);
+        this.showErrorMessage(imageRemoveError);
       }
     );
   }
