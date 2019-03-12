@@ -4,8 +4,8 @@ import { CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Snackbar from '@material-ui/core/Snackbar';
-import ImagePreview from './ImagePreview';
-import UploadButton from './UploadButton';
+import ImagePreview from './ImageUploadPreview';
+import UploadButton from './ImageUploadButton';
 
 const styles = theme => ({
   root: {

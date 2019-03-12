@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import { Formik, FieldArray } from 'formik';
-import { Button, Grid, TextField, MenuItem } from '@material-ui/core';
+import { Formik, FieldArray, Field } from 'formik';
+import { Button, Grid, TextField, MenuItem, IconButton, Fab } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DragIndicator from '@material-ui/icons/DragIndicator';
+import AddIcon from '@material-ui/icons/Add';
 import UploadImages from './UploadImages';
 
 const styles = theme => ({
@@ -27,6 +30,10 @@ const styles = theme => ({
     width: "50%",
     textAlign: "left",
   },
+  fab: {
+    marginTop: 2 * theme.spacing.unit,
+    marginBottom: theme.spacing.unit
+  }
 });
 
 const categoryRange = [
@@ -50,8 +57,74 @@ class EditRecipe extends Component {
     // initialValues: PropTypes.object,
   };
 
-  renderForm = () => {
-    const { classes, initialValues } = this.props;
+  renderIngredients = (formikProps, classes) => {
+    const { values, handleBlur, handleChange } = formikProps;
+    return (
+      <FieldArray 
+        name="ingredients" 
+        render={arrayHelpers => (
+          <div>
+            {values.ingredients && values.ingredients.length > 0 ? (
+              values.ingredients.map((ingredient, index) => (
+                <div key={index}>
+                  <TextField 
+                    id={`ingredients[${index}].name`}
+                    value={ingredient.name} 
+                    label="Ingredient" 
+                    name={`ingredients[${index}].name`} 
+                    type="text" 
+                    required 
+                    margin="normal" 
+                    variant="outlined" 
+                    placeholder="Name"
+                    onChange={handleChange} 
+                    onBlur={handleBlur} 
+                  />
+                  <TextField 
+                    id={`ingredients[${index}].quantity`}
+                    value={ingredient.quantity} 
+                    label="Quantity" 
+                    name={`ingredients[${index}].quantity`} 
+                    type="text" 
+                    required 
+                    margin="normal" 
+                    variant="outlined" 
+                    placeholder="Quantity"
+                    onChange={handleChange} 
+                    onBlur={handleBlur} 
+                  />
+                  <IconButton 
+                    aria-label="Delete" 
+                    onClick={() => arrayHelpers.remove(index)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton 
+                    aria-label="Delete" 
+                  >
+                    <DragIndicator />
+                  </IconButton>
+                </div>
+              ))
+            ) : (
+              <h3>There is not any ingredient yet. Press below button to add one.</h3>
+            )}
+            <Fab 
+              color="primary" 
+              aria-label="Add" 
+              className={classes.fab} 
+              onClick={() => arrayHelpers.push({name: '', quantity: ''})} 
+            >
+              <AddIcon />
+            </Fab>
+            
+          </div>
+        )}
+      />
+    );
+  };
+
+  renderForm = (formikProps, classes) => {
     return (
       <Grid 
         container 
@@ -148,6 +221,7 @@ class EditRecipe extends Component {
                 variant="outlined"
               />
               <UploadImages />
+              {this.renderIngredients(formikProps, classes)}
             </div>
           </form>
         </Grid>
@@ -159,11 +233,10 @@ class EditRecipe extends Component {
     const { classes, handleSubmit, initialValues } = this.props;
     return (
       <div className={classes.root}>
-        {/* <Formik 
-          onSubmit={handleSubmit} 
-          initialValues={initialValues} 
-        ></Formik> */}
-        {this.renderForm()}
+        <Formik 
+          onSubmit={handleSubmit}  
+          render={(formikProps) => this.renderForm(formikProps, classes)}
+        />
       </div>
     );
   }
