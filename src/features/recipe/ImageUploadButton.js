@@ -16,13 +16,15 @@ const styles = theme => ({
 
 function UploadButton(props) {
   const { classes, onChange } = props;
-  return (<div>
-    <InputLabel htmlFor="single">
-      <AddAPhoto className={classNames(classes.bigIcon, classes.iconCursor)} />
-      <p>Add a Photo</p>
-    </InputLabel>
-    <input hidden type="file" id="single" onChange={onChange} />
-  </div>);
+  return (
+    <div>
+      <InputLabel htmlFor="single">
+        <AddAPhoto className={classNames(classes.bigIcon, classes.iconCursor)} />
+        <p>Add a Photo</p>
+      </InputLabel>
+      <input hidden type="file" id="single" onChange={onChange} />
+    </div>
+  );
 }
 
 UploadButton.propTypes = {
