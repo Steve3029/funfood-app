@@ -49,7 +49,7 @@ class RecipeIngredientsFormFragment extends Component {
       startPageY: evt.pageY,
       currentPageY: evt.pageY,
       draggingIndex: index,
-      lineHeight: evt.target.clientHeight,
+      lineHeight: evt.target.parentNode.clientHeight,
     });
   }
 
@@ -110,7 +110,6 @@ class RecipeIngredientsFormFragment extends Component {
                 values.ingredients.map((ingredient, index) => (
                   <div 
                     key={index}
-                    onMouseDown={evt => this.handleMouseDown(evt, index)}
                     style={this.getDraggingStyle(index)}
                   >
                     <TextField
@@ -147,6 +146,7 @@ class RecipeIngredientsFormFragment extends Component {
                     </IconButton>
                     <IconButton
                       aria-label="Drag"
+                      onMouseDown={evt => this.handleMouseDown(evt, index)}
                     >
                       <DragIndicator />
                     </IconButton>
