@@ -6,24 +6,21 @@ class RecipeCoverFormFragment extends Component {
 
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   updateImageUrl = url => {
-    this.props.values.coverImage = url;
+    this.props.setFieldValue("coverImage", url);
   };
 
   render() {
-    const { values, onChange } = this.props;
+    const { values } = this.props;
     return (
       <div>
         <UploadImages callBack={this.updateImageUrl} />
         <input 
+          id="coverImage"
+          name="coverImage"
           hidden 
           type="text" 
           value={values.coverImage} 
-          onChange={onChange}
         />
       </div>
     );

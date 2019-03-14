@@ -87,7 +87,8 @@ class UploadImages extends Component {
         this.setState({ 
           uploading: false,
           image: res.data,
-          });
+        });
+        this.props.callBack(res.data.secure_url);
       },
 
       (err) => {
@@ -109,7 +110,8 @@ class UploadImages extends Component {
         this.setState({
           removing: false,
           image: null
-        })
+        });
+        this.props.callBack(null);
       },
 
       (errs) => {

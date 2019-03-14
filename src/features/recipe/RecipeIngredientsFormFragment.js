@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FieldArray } from 'formik';
-import {TextField, IconButton, Fab } from '@material-ui/core';
+import { TextField, IconButton, Fab } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import AddIcon from '@material-ui/icons/Add';
@@ -10,13 +10,93 @@ const styles = theme => ({
   fab: {
     marginTop: 2 * theme.spacing.unit,
     marginBottom: theme.spacing.unit
-  }
+  },
+  dndMask: {
+    position: "fixed",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    background: "rgba(0,0,0,0)",
+  },
 });
+
+const move = (arr, startIndex, toIndex) => {
+  arr = arr.slice();
+  arr.splice(toIndex, 0, arr.splice(startIndex, 1)[0]);
+  return arr;
+};
 
 class RecipeIngredientsFormFragment extends Component {
   static propTypes = {
 
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      dragging: false,
+      draggingIndex: -1,
+      startPageY: 0,
+      offsetPageY: 0,
+    };
+  }
+
+  // handle dragging start activity
+  handleMouseDown = (evt, index) => {
+    this.setState({
+      dragging: true,
+      startPageY: evt.pageY,
+      currentPageY: evt.pageY,
+      draggingIndex: index,
+      lineHeight: evt.target.clientHeight,
+    });
+  }
+
+  // handle drop off
+  handleMouseUp = () => {
+    this.setState({
+      dragging: false,
+      startPageY: 0,
+      draggingIndex: -1
+    });
+  };
+
+  // handle mouse moving
+  handleMouseMove = evt => {
+    let offset = evt.pageY - this.state.startPageY;
+    const draggingIndex = this.state.draggingIndex;
+    const lineHeight = this.state.lineHeight;
+
+    if (offset > lineHeight && draggingIndex < this.props.values.ingredients.length - 1) {
+      // move down
+      offset -= lineHeight;
+      this.props.setFieldValue("ingredients", move(this.props.values.ingredients, draggingIndex, draggingIndex + 1));
+      this.setState({
+        draggingIndex: draggingIndex + 1,
+        startPageY: this.state.startPageY + lineHeight,
+      });
+    } else if (offset < -lineHeight && draggingIndex > 0) {
+      // move up
+      offset += lineHeight;
+      this.props.setFieldValue("ingredients", move(this.props.values.ingredients, draggingIndex, draggingIndex - 1));
+      this.setState({
+        draggingIndex: draggingIndex - 1,
+        startPageY: this.state.startPageY - lineHeight,
+      });
+    }
+    this.setState({ offsetPageY: offset });
+  }
+
+  getDraggingStyle = index => {
+    if (index !== this.state.draggingIndex)
+      return {};
+    return {
+      backgroundColor: "#eee",
+      transform: `translate(10px, ${this.state.offsetPageY}px)`,
+      opacity: 0.5,
+    };
+  }
 
   render() {
     const { classes, values, handleChange, handleBlur } = this.props;
@@ -28,7 +108,11 @@ class RecipeIngredientsFormFragment extends Component {
             <div>
               {values.ingredients && values.ingredients.length > 0 ? (
                 values.ingredients.map((ingredient, index) => (
-                  <div key={index}>
+                  <div 
+                    key={index}
+                    onMouseDown={evt => this.handleMouseDown(evt, index)}
+                    style={this.getDraggingStyle(index)}
+                  >
                     <TextField
                       id={`ingredients[${index}].name`}
                       value={ingredient.name}
@@ -62,7 +146,7 @@ class RecipeIngredientsFormFragment extends Component {
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
-                      aria-label="Delete"
+                      aria-label="Drag"
                     >
                       <DragIndicator />
                     </IconButton>
@@ -83,6 +167,13 @@ class RecipeIngredientsFormFragment extends Component {
             </div>
           )}
         />
+        {this.state.dragging && (
+          <div 
+            className={classes.dndMask}
+            onMouseMove={this.handleMouseMove}
+            onMouseUp={this.handleMouseUp}
+          />
+        )}
       </div>
     );
   }

@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import { Grid } from '@material-ui/core';
+import RecipeInfo from './RecipeInfoFormFragment';
+import RecipeCover from './RecipeCoverFormFragment';
+import RecipeIngredients from './RecipeIngredientsFormFragment';
 
 const styles = theme => ({
+  root: {
+    width: "100%",
+  },
   margin: {
     margin: theme.spacing.unit,
   },
@@ -19,6 +25,17 @@ class EditRecipe extends Component {
     // initialValues: PropTypes.object,
   };
 
+  renderForm = properties => {
+    const { classes } = properties;
+    return (
+      <Form>
+        <RecipeInfo {...properties} />
+        <RecipeCover {...properties} />
+        <RecipeIngredients {...properties} />
+      </Form>
+    );
+  };
+
   render() {
     const { classes, handleSubmit, initialValues } = this.props;
     return (
@@ -31,7 +48,8 @@ class EditRecipe extends Component {
         <Grid item xs={6}>
           <div className={classes.root}>
             <Formik
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit} 
+              render={props => this.renderForm(props)}
             />
           </div>
         </Grid>
