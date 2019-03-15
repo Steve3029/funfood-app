@@ -39,7 +39,7 @@ class UploadImages extends Component {
 
   };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       uploading: false,
@@ -84,11 +84,13 @@ class UploadImages extends Component {
     const doRequest = axios.post("https://localhost:5001/api/v1/images/upload", formData);
     doRequest.then(
       (res) => {
-        this.setState({ 
+        this.setState({
           uploading: false,
           image: res.data,
         });
-        this.props.callBack(res.data.secure_url);
+        this.props.index ? 
+          this.props.callBack(res.data.secure_url, this.props.index) : 
+          this.props.callBack(res.data.secure_url);
       },
 
       (err) => {
@@ -101,7 +103,7 @@ class UploadImages extends Component {
   removeImage = id => {
     if (id == null || id === "")
       return;
-    
+
     const requestPath = "https://localhost:5001/api/v1/images/destroy?desc=" + id;
     const doRequest = axios.get(requestPath);
     this.setState({ removing: true });
@@ -111,7 +113,9 @@ class UploadImages extends Component {
           removing: false,
           image: null
         });
-        this.props.callBack(null);
+        this.props.index ? 
+          this.props.callBack(null, this.props.index) : 
+          this.props.callBack(null);
       },
 
       (errs) => {
@@ -124,7 +128,7 @@ class UploadImages extends Component {
   }
 
   handleNoticeClose = () => {
-    this.setState({ 
+    this.setState({
       open: false,
       error: "",
     });
@@ -134,7 +138,7 @@ class UploadImages extends Component {
     const { uploading, removing, image, error, open } = this.state;
     const { classes } = this.props;
     const content = () => {
-      switch(true) {
+      switch (true) {
         case removing:
         case uploading:
           return <CircularProgress size={64} className={classes.buttonProgress} />
@@ -149,16 +153,16 @@ class UploadImages extends Component {
       <div className={classes.root}>
         {content()}
         <Snackbar
-            open={open}
-            autoHideDuration={4000}
-            onClose={this.handleNoticeClose}
-            ContentProps={{
-              'aria-describedby': 'snackbar-fab-message-id',
-              className: classes.snackbarContent,
-            }}
-            message={<span id="snackbar-fab-message-id">{error}</span>}
-            className={classes.snackbar}
-          />
+          open={open}
+          autoHideDuration={4000}
+          onClose={this.handleNoticeClose}
+          ContentProps={{
+            'aria-describedby': 'snackbar-fab-message-id',
+            className: classes.snackbarContent,
+          }}
+          message={<span id="snackbar-fab-message-id">{error}</span>}
+          className={classes.snackbar}
+        />
       </div>
     );
   }

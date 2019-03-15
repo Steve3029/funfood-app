@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 import RecipeInfo from './RecipeInfoFormFragment';
 import RecipeCover from './RecipeCoverFormFragment';
 import RecipeIngredients from './RecipeIngredientsFormFragment';
+import RecipeCookSteps from './RecipeCookStepsFormFragment';
 
 const styles = theme => ({
   root: {
@@ -32,6 +33,7 @@ class EditRecipe extends Component {
         <RecipeInfo {...properties} />
         <RecipeCover {...properties} />
         <RecipeIngredients {...properties} />
+        <RecipeCookSteps {...properties} />
       </Form>
     );
   };
