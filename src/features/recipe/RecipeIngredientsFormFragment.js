@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FieldArray } from 'formik';
-import { TextField, IconButton, Fab } from '@material-ui/core';
+import { TextField, IconButton, Fab, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import AddIcon from '@material-ui/icons/Add';
+import withDnD from './withDnD';
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  gridWrap: {
+    flexWrap: "nowrap",
+  },
   fab: {
     marginTop: 2 * theme.spacing.unit,
     marginBottom: theme.spacing.unit
@@ -21,85 +28,23 @@ const styles = theme => ({
   },
 });
 
-const move = (arr, startIndex, toIndex) => {
-  arr = arr.slice();
-  arr.splice(toIndex, 0, arr.splice(startIndex, 1)[0]);
-  return arr;
-};
-
 class RecipeIngredientsFormFragment extends Component {
   static propTypes = {
 
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      dragging: false,
-      draggingIndex: -1,
-      startPageY: 0,
-      offsetPageY: 0,
-    };
-  }
-
-  // handle dragging start activity
-  handleMouseDown = (evt, index) => {
-    this.setState({
-      dragging: true,
-      startPageY: evt.pageY,
-      currentPageY: evt.pageY,
-      draggingIndex: index,
-      lineHeight: evt.target.parentNode.clientHeight,
-    });
-  }
-
-  // handle drop off
-  handleMouseUp = () => {
-    this.setState({
-      dragging: false,
-      startPageY: 0,
-      draggingIndex: -1
-    });
-  };
-
-  // handle mouse moving
-  handleMouseMove = evt => {
-    let offset = evt.pageY - this.state.startPageY;
-    const draggingIndex = this.state.draggingIndex;
-    const lineHeight = this.state.lineHeight;
-
-    if (offset > lineHeight && draggingIndex < this.props.values.ingredients.length - 1) {
-      // move down
-      offset -= lineHeight;
-      this.props.setFieldValue("ingredients", move(this.props.values.ingredients, draggingIndex, draggingIndex + 1));
-      this.setState({
-        draggingIndex: draggingIndex + 1,
-        startPageY: this.state.startPageY + lineHeight,
-      });
-    } else if (offset < -lineHeight && draggingIndex > 0) {
-      // move up
-      offset += lineHeight;
-      this.props.setFieldValue("ingredients", move(this.props.values.ingredients, draggingIndex, draggingIndex - 1));
-      this.setState({
-        draggingIndex: draggingIndex - 1,
-        startPageY: this.state.startPageY - lineHeight,
-      });
-    }
-    this.setState({ offsetPageY: offset });
-  }
-
-  getDraggingStyle = index => {
-    if (index !== this.state.draggingIndex)
-      return {};
-    return {
-      backgroundColor: "#eee",
-      transform: `translate(10px, ${this.state.offsetPageY}px)`,
-      opacity: 0.5,
-    };
-  }
-
   render() {
-    const { classes, values, handleChange, handleBlur } = this.props;
+    const {
+      classes,
+      values,
+      handleMouseDown,
+      getDraggingStyle,
+      handleMouseUp,
+      handleMouseMove,
+      handleChange,
+      handleBlur
+    } = this.props;
+
     return (
       <div>
         <FieldArray
@@ -108,48 +53,59 @@ class RecipeIngredientsFormFragment extends Component {
             <div>
               {values.ingredients && values.ingredients.length > 0 ? (
                 values.ingredients.map((ingredient, index) => (
-                  <div 
+                  <div
                     key={index}
-                    style={this.getDraggingStyle(index)}
+                    style={getDraggingStyle(index)}
+                    className={classes.root}
                   >
-                    <TextField
-                      id={`ingredients[${index}].name`}
-                      value={ingredient.name}
-                      label="Ingredient"
-                      name={`ingredients[${index}].name`}
-                      type="text"
-                      required
-                      margin="normal"
-                      variant="outlined"
-                      placeholder="Name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    <TextField
-                      id={`ingredients[${index}].quantity`}
-                      value={ingredient.quantity}
-                      label="Quantity"
-                      name={`ingredients[${index}].quantity`}
-                      type="text"
-                      required
-                      margin="normal"
-                      variant="outlined"
-                      placeholder="Quantity"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    <IconButton
-                      aria-label="Delete"
-                      onClick={() => arrayHelpers.remove(index)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="Drag"
-                      onMouseDown={evt => this.handleMouseDown(evt, index)}
-                    >
-                      <DragIndicator />
-                    </IconButton>
+                    <Grid container spacing={8}>
+                      <Grid item xs={5}>
+                        <TextField
+                          id={`ingredients[${index}].name`}
+                          value={ingredient.name}
+                          label="Ingredient"
+                          name={`ingredients[${index}].name`}
+                          type="text"
+                          required
+                          fullWidth
+                          margin="normal"
+                          variant="outlined"
+                          placeholder="Name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </Grid>
+                      <Grid item xs={5}>
+                        <TextField
+                          id={`ingredients[${index}].quantity`}
+                          value={ingredient.quantity}
+                          label="Quantity"
+                          name={`ingredients[${index}].quantity`}
+                          type="text"
+                          required
+                          fullWidth
+                          margin="normal"
+                          variant="outlined"
+                          placeholder="Quantity"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <IconButton
+                          aria-label="Delete"
+                          onClick={() => arrayHelpers.remove(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="Drag"
+                          onMouseDown={evt => handleMouseDown(evt, index)}
+                        >
+                          <DragIndicator />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
                   </div>
                 ))
               ) : (
@@ -167,11 +123,11 @@ class RecipeIngredientsFormFragment extends Component {
             </div>
           )}
         />
-        {this.state.dragging && (
-          <div 
+        {this.props.isDragging && (
+          <div
             className={classes.dndMask}
-            onMouseMove={this.handleMouseMove}
-            onMouseUp={this.handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
           />
         )}
       </div>
@@ -179,4 +135,4 @@ class RecipeIngredientsFormFragment extends Component {
   }
 }
 
-export default withStyles(styles)(RecipeIngredientsFormFragment)
+export default withStyles(styles)(withDnD(RecipeIngredientsFormFragment, "ingredients"));

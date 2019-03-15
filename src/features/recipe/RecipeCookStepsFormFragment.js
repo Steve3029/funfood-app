@@ -45,7 +45,17 @@ class RecipeCookStepsFormFragment extends Component {
   };
 
   render() {
-    const { classes, values, handleMouseDown, getDraggingStyle, handleChange, handleBlur } = this.props;
+    const { 
+      classes, 
+      values, 
+      handleMouseDown, 
+      handleMouseMove,
+      handleMouseUp,
+      getDraggingStyle, 
+      handleChange, 
+      handleBlur 
+    } = this.props;
+
     return (
       <div>
         <FieldArray
@@ -123,8 +133,8 @@ class RecipeCookStepsFormFragment extends Component {
         {this.props.isDragging && (
           <div
             className={classes.dndMask}
-            onMouseMove={this.props.handleMouseMove}
-            onMouseUp={this.props.handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
           />
         )}
       </div>
