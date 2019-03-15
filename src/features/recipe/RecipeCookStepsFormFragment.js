@@ -70,8 +70,8 @@ class RecipeCookStepsFormFragment extends Component {
                     className={classes.root}
                   >
                     <Grid className={classes.gridWrap} container spacing={8}>
-                      <Grid item xs={6}>
-                        <UploadImages index={index} callBack={this.updateImage} />
+                      <Grid item xs={4}>
+                        <UploadImages idName={`cookStep-${index}`} index={index} callBack={this.updateImage} />
                         <input
                           id={`cookSteps[${index}].shotcut`}
                           name={`cookSteps[${index}].shotcut`}
@@ -81,7 +81,7 @@ class RecipeCookStepsFormFragment extends Component {
                           onChange={handleChange}
                         />
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={6}>
                         <TextField
                           id={`cookSteps[${index}].instruction`}
                           name={`cookSteps[${index}].instruction`}
@@ -99,7 +99,7 @@ class RecipeCookStepsFormFragment extends Component {
                           onBlur={handleBlur}
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={2}>
                         <IconButton
                           aria-label="Delete"
                           onClick={() => arrayHelpers.remove(index)}

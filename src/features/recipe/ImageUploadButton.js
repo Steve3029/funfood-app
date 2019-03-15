@@ -12,14 +12,14 @@ const styles = theme => ({
 });
 
 function UploadButton(props) {
-  const { classes, onChange } = props;
+  const { classes, onChange, idName } = props;
   return (
-    <div>
-      <InputLabel htmlFor="single">
+    <div key={`btn-${idName}`}>
+      <InputLabel htmlFor={idName}>
         <AddAPhoto className={classes.bigIcon} />
         
       </InputLabel>
-      <input hidden type="file" id="single" onChange={onChange} />
+      <input hidden type="file" id={idName} onChange={onChange} />
     </div>
   );
 }

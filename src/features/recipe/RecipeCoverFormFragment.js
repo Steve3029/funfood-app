@@ -14,7 +14,7 @@ class RecipeCoverFormFragment extends Component {
     const { values } = this.props;
     return (
       <div>
-        <UploadImages callBack={this.updateImageUrl} />
+        <UploadImages idName="coverImage" callBack={this.updateImageUrl} />
         <input 
           id="coverImage"
           name="coverImage"

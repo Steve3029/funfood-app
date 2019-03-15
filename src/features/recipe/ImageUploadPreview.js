@@ -21,8 +21,9 @@ const styles = theme => ({
 });
 
 function ImagePreview(props) {
-  const { classes, removeImage, image } = props;
-  return (<div>
+  const { classes, removeImage, image, idName } = props;
+  return (
+  <div key={`view-${idName}`}>
     <div className={classes.delete} onClick={() => removeImage(image.public_id)}>
       <HighlightOff className={classes.normalIcon} color="secondary" />
     </div>
