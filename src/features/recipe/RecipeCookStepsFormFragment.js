@@ -5,8 +5,13 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import withDnD from './withDnD';
-import { FieldArray } from 'formik';
+import { FieldArray, getIn } from 'formik';
+import * as yup from 'yup';
 import UploadImages from './UploadImages';
+
+const validationSchema = {
+  
+}
 
 const styles = theme => ({
   root: {
@@ -33,6 +38,8 @@ const styles = theme => ({
 });
 
 
+
+
 class RecipeCookStepsFormFragment extends Component {
   static propTypes = {
 
@@ -44,6 +51,18 @@ class RecipeCookStepsFormFragment extends Component {
     this.props.setFieldValue("cookSteps", arr);
   };
 
+  getErrorMsg = (errors, touched, name) => {
+    const error = getIn(errors, name);
+    const touch = getIn(touched, name);
+    return touch && error ? error : null;
+  };
+
+  hasError = (errors, touched, name) => {
+    const error = getIn(errors, name);
+    const touch = getIn(touched, name);
+    return touch && error ? true : false;
+  };
+
   render() {
     const { 
       classes, 
@@ -53,7 +72,9 @@ class RecipeCookStepsFormFragment extends Component {
       handleMouseUp,
       getDraggingStyle, 
       handleChange, 
-      handleBlur 
+      handleBlur,
+      errors,
+      touched, 
     } = this.props;
 
     return (
@@ -97,6 +118,8 @@ class RecipeCookStepsFormFragment extends Component {
                           variant="outlined"
                           onChange={handleChange}
                           onBlur={handleBlur}
+                          helperText={this.getErrorMsg(errors, touched, `cookSteps[${index}].instruction`)}
+                          error={this.hasError(errors, touched, `cookSteps[${index}].instruction`)}
                         />
                       </Grid>
                       <Grid item xs={2}>

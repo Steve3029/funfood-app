@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { FieldArray } from 'formik';
+import { FieldArray, getIn } from 'formik';
 import { TextField, IconButton, Fab, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
@@ -33,6 +33,18 @@ class RecipeIngredientsFormFragment extends Component {
 
   };
 
+  getErrorMsg = (errors, touched, name) => {
+    const error = getIn(errors, name);
+    const touch = getIn(touched, name);
+    return touch && error ? error : null;
+  };
+
+  hasError = (errors, touched, name) => {
+    const error = getIn(errors, name);
+    const touch = getIn(touched, name);
+    return touch && error ? true : false;
+  };
+
   render() {
     const {
       classes,
@@ -42,7 +54,9 @@ class RecipeIngredientsFormFragment extends Component {
       handleMouseUp,
       handleMouseMove,
       handleChange,
-      handleBlur
+      handleBlur,
+      errors,
+      touched,
     } = this.props;
 
     return (
@@ -73,6 +87,8 @@ class RecipeIngredientsFormFragment extends Component {
                           placeholder="Name"
                           onChange={handleChange}
                           onBlur={handleBlur}
+                          helperText={this.getErrorMsg(errors, touched, `ingredients[${index}].name`)}
+                          error={this.hasError(errors, touched, `ingredients[${index}].name`)}
                         />
                       </Grid>
                       <Grid item xs={5}>
@@ -89,6 +105,8 @@ class RecipeIngredientsFormFragment extends Component {
                           placeholder="Quantity"
                           onChange={handleChange}
                           onBlur={handleBlur}
+                          helperText={this.getErrorMsg(errors, touched, `ingredients[${index}].quantity`)}
+                          error={this.hasError(errors, touched, `ingredients[${index}].quantity`)}
                         />
                       </Grid>
                       <Grid item xs={2}>
