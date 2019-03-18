@@ -6,7 +6,7 @@ import * as actions from './redux/actions';
 import { withStyles } from '@material-ui/core/styles';
 import { Dialog, FormHelperText } from '@material-ui/core';
 import * as yup from 'yup';
-import { DialogTitle, DialogContent } from './customizeDialogHelper';
+import { DialogTitle, DialogContent } from '../common/customizeDialogHelper';
 import { Formik } from 'formik';
 import FormGenerator from './FormGenerator';
 

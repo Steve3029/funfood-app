@@ -3,14 +3,14 @@ import axios from 'axios';
 import { CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import Snackbar from '@material-ui/core/Snackbar';
+import MessageDialog from './MessageDialogFrame';
 import ImagePreview from './ImageUploadPreview';
 import UploadButton from './ImageUploadButton';
 
 const styles = theme => ({
   root: {
     width: "100%",
-    border: "1px solid",
+    border: "1px dashed",
     borderRadius: "4px",
     textAlign: "center",
     marginBottom: theme.spacing.unit * 4,
@@ -19,12 +19,6 @@ const styles = theme => ({
     color: green[500],
     marginTop: 61,
   },
-  snackbar: {
-    position: 'absolute',
-  },
-  snackbarContent: {
-    backgroundColor: theme.palette.error.dark,
-  }
 });
 
 // Messages of image format errors
@@ -50,31 +44,24 @@ class UploadImages extends Component {
     }
   }
 
-  showErrorMessage = (errorMsg) => {
-    this.setState({
-      error: errorMsg,
-      open: true,
-    })
-  }
-
   onChange = event => {
     const file = Array.from(event.target.files);
     // multiple images upload is not allowed
     if (file.length > 1) {
-      this.showErrorMessage(imageQuantityError);
+      this.handleShowErrMsgModal(imageQuantityError);
       return;
     }
     const image = file[0];
     // only support png, jpeg, gif image
     const types = ['image/png', 'image/jpeg', 'image/gif'];
     if (types.every(type => image.type !== type)) {
-      this.showErrorMessage(imageFormatError);
+      this.handleShowErrMsgModal(imageFormatError);
       return;
     }
 
     // the size of image is limited
     if (image.size > 150000) {
-      this.showErrorMessage(imageSizeError);
+      this.handleShowErrMsgModal(imageSizeError);
       return;
     }
 
@@ -88,14 +75,14 @@ class UploadImages extends Component {
           uploading: false,
           image: res.data,
         });
-        this.props.index ? 
-          this.props.callBack(res.data.secure_url, this.props.index) : 
+        this.props.index ?
+          this.props.callBack(res.data.secure_url, this.props.index) :
           this.props.callBack(res.data.secure_url);
       },
 
       (err) => {
         this.setState({ uploading: false });
-        this.showErrorMessage(imageUploadError);
+        this.handleShowErrMsgModal(imageUploadError);
       }
     );
   }
@@ -113,8 +100,8 @@ class UploadImages extends Component {
           removing: false,
           image: null
         });
-        this.props.index ? 
-          this.props.callBack(null, this.props.index) : 
+        this.props.index ?
+          this.props.callBack(null, this.props.index) :
           this.props.callBack(null);
       },
 
@@ -122,12 +109,19 @@ class UploadImages extends Component {
         this.setState({
           removing: false
         });
-        this.showErrorMessage(imageRemoveError);
+        this.handleShowErrMsgModal(imageRemoveError);
       }
     );
   }
 
-  handleNoticeClose = () => {
+  handleShowErrMsgModal = (errorMsg) => {
+    this.setState({
+      error: errorMsg,
+      open: true,
+    })
+  }
+
+  handleCloseErrMsgModal = () => {
     this.setState({
       open: false,
       error: "",
@@ -152,16 +146,10 @@ class UploadImages extends Component {
     return (
       <div key={idName} className={classes.root}>
         {content()}
-        <Snackbar
-          open={open}
-          autoHideDuration={4000}
-          onClose={this.handleNoticeClose}
-          ContentProps={{
-            'aria-describedby': 'snackbar-fab-message-id',
-            className: classes.snackbarContent,
-          }}
-          message={<span id="snackbar-fab-message-id">{error}</span>}
-          className={classes.snackbar}
+        <MessageDialog
+          openModal={open}
+          message={error}
+          handleClose={this.handleCloseErrMsgModal}
         />
       </div>
     );

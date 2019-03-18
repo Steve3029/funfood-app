@@ -7,3 +7,4 @@ export { default as RecipeInfoFormFragment } from './RecipeInfoFormFragment';
 export { default as RecipeCoverFormFragment } from './RecipeCoverFormFragment';
 export { default as RecipeIngredientsFormFragment } from './RecipeIngredientsFormFragment';
 export { default as RecipeCookStepsFormFragment } from './RecipeCookStepsFormFragment';
+export { default as MessageDialogFrame } from './MessageDialogFrame';
