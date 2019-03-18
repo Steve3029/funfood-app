@@ -130,14 +130,14 @@ class UploadImages extends Component {
 
   render() {
     const { uploading, removing, image, error, open } = this.state;
-    const { classes, idName } = this.props;
+    const { classes, idName, size } = this.props;
     const content = () => {
       switch (true) {
         case removing:
         case uploading:
           return <CircularProgress size={64} className={classes.buttonProgress} />
         case image != null:
-          return <ImagePreview idName={idName} classes={classes} image={image} removeImage={this.removeImage} />
+          return <ImagePreview idName={idName} classes={classes} imgSize={size} image={image} removeImage={this.removeImage} />
         default:
           return <UploadButton idName={idName} classes={classes} onChange={this.onChange} />
       }

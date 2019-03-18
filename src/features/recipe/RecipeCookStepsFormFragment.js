@@ -91,7 +91,7 @@ class RecipeCookStepsFormFragment extends Component {
                   >
                     <Grid className={classes.gridWrap} container spacing={8}>
                       <Grid item xs={4}>
-                        <UploadImages idName={`cookStep-${index}`} index={index} callBack={this.updateImage} />
+                        <UploadImages idName={`cookStep-${index}`} index={index} size="small" callBack={this.updateImage} />
                         <input
                           id={`cookSteps[${index}].shotcut`}
                           name={`cookSteps[${index}].shotcut`}

@@ -13,21 +13,26 @@ const styles = theme => ({
     left: 5,
     float: "left",
   },
-  img: {
+  bigImg: {
     maxWidth: 834,
     maxHeight: 834,
     padding: 2,
   },
+  smallImg: {
+    maxWidth: 272,
+    maxHeight: 133,
+    padding: 1,
+  }
 });
 
 function ImagePreview(props) {
-  const { classes, removeImage, image, idName } = props;
+  const { classes, removeImage, image, idName, imgSize } = props;
   return (
   <div key={`view-${idName}`}>
     <div className={classes.delete} onClick={() => removeImage(image.public_id)}>
       <HighlightOff className={classes.normalIcon} color="secondary" />
     </div>
-    <img className={classes.img} src={image.secure_url} alt="" />
+    <img className={imgSize === "big" ? classes.bigImg : classes.smallImg} src={image.secure_url} alt="" />
   </div>);
 }
 
