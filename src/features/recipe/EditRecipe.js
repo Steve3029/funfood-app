@@ -7,6 +7,7 @@ import RecipeInfo from './RecipeInfoFormFragment';
 import RecipeCover from './RecipeCoverFormFragment';
 import RecipeIngredients from './RecipeIngredientsFormFragment';
 import RecipeCookSteps from './RecipeCookStepsFormFragment';
+import * as yup from 'yup';
 
 const styles = theme => ({
   root: {
@@ -20,6 +21,43 @@ const styles = theme => ({
   },
 });
 
+const recipeFormValidationSchema = yup.object().shape({
+  title: yup.string()
+    .max(100, 'Maxmum of 100 characters.')
+    .required('Your recipe must have a title.'),
+  subtitle: yup.string()
+    .max(100, 'Maxmum of 100 characters.')
+    .required('subtitle is required.'),
+  description: yup.string()
+    .max(300, 'Maxmum of 300 characters.')
+    .required(),
+  coverImage: yup.string()
+    .required('Recipe needs a cover image.'),
+  ingredients: yup.array()
+    .of(
+      yup.object().shape({
+        name: yup.string()
+          .max(100, 'Maxmum of 100 characters.')
+          .required('Name of ingerident is required.'),
+        quantity: yup.string()
+          .max(100, 'Maxmum of 100 characters.')
+          .required('Quantity of ingredent is required.')
+      })
+    )
+    .required('Must have some ingerident.')
+    .min(3, 'Minimum of 3 ingeridents.'),
+  cookSteps: yup.array()
+    .of(
+      yup.object().shape({
+        instruction: yup.string()
+          .max(200, 'Maxmum of 200 characters.')
+          .required('Instruction is required.')
+      })
+    )
+    .required('Must have some cooking steps.')
+    .min(3, 'Minimum of 3 steps.')
+});
+
 class EditRecipe extends Component {
   static propTypes = {
     // handleSubmit: PropTypes.func.isRequired,
@@ -27,7 +65,6 @@ class EditRecipe extends Component {
   };
 
   renderForm = properties => {
-    const { classes } = properties;
     return (
       <Form>
         <RecipeInfo {...properties} />
@@ -51,6 +88,7 @@ class EditRecipe extends Component {
           <div className={classes.root}>
             <Formik
               onSubmit={handleSubmit} 
+              validationSchema={recipeFormValidationSchema}
               render={props => this.renderForm(props)}
             />
           </div>

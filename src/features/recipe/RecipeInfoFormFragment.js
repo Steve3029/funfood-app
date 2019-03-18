@@ -47,7 +47,13 @@ class RecipeInfoFormFragment extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { 
+      classes, 
+      errors, 
+      touched, 
+      handleChange, 
+      handleBlur 
+    } = this.props;
     return (
       <div>
         {/* {initialValues && <title>{initialValues.title}</title>} */}
@@ -81,6 +87,10 @@ class RecipeInfoFormFragment extends Component {
             variant="outlined"
             placeholder="Enter a title here for new recipe"
             className={classes.fieldMargin}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            helperText={touched.title ? errors.title : ""}
+            error={touched.title && Boolean(errors.title)}
           />
           <TextField
             id="subtitle"
@@ -93,6 +103,10 @@ class RecipeInfoFormFragment extends Component {
             variant="outlined"
             placeholder="Enter a subtitle here like 'with onien and wine'"
             className={classes.fieldMargin}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            helperText={touched.subtitle ? errors.subtitle : ""}
+            error={touched.subtitle && Boolean(errors.subtitle)}
           />
           <div className={classes.selectEls}>
             <TextField
@@ -135,6 +149,10 @@ class RecipeInfoFormFragment extends Component {
             className={classes.fieldMargin}
             margin="normal"
             variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            helperText={touched.description ? errors.description : ""}
+            error={touched.description && Boolean(errors.description)}
           />
         </div>
       </div>

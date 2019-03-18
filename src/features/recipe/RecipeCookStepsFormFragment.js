@@ -6,7 +6,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import withDnD from './withDnD';
 import { FieldArray, getIn } from 'formik';
-import * as yup from 'yup';
 import UploadImages from './UploadImages';
 
 const validationSchema = {
