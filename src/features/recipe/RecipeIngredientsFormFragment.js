@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FieldArray, getIn } from 'formik';
-import { TextField, IconButton, Fab, Grid } from '@material-ui/core';
+import { TextField, IconButton, Fab, Grid, FormHelperText } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import AddIcon from '@material-ui/icons/Add';
@@ -26,6 +26,16 @@ const styles = theme => ({
     bottom: 0,
     background: "rgba(0,0,0,0)",
   },
+  errorContainer: {
+    backgroundColor: theme.palette.error.dark,
+    borderRadius: 3,
+  },
+  errorMsg: {
+    marginBottom: theme.spacing.unit * 2,
+    fontSize: 20,
+    padding: 7,
+    color: theme.palette.getContrastText(theme.palette.error.dark),
+  }
 });
 
 class RecipeIngredientsFormFragment extends Component {
@@ -58,6 +68,10 @@ class RecipeIngredientsFormFragment extends Component {
       errors,
       touched,
     } = this.props;
+
+    const ingredientsError = typeof errors.ingredients === 'string'
+      ? errors.ingredients
+      : null;
 
     return (
       <div>
@@ -127,7 +141,22 @@ class RecipeIngredientsFormFragment extends Component {
                   </div>
                 ))
               ) : (
-                  <h3>There is not any ingredient yet. Press below button to add one.</h3>
+                  <div>
+                    <h3>There is not any ingredient yet. Press below button to add one.</h3>
+                    {ingredientsError
+                      &&
+                      (<div className={classes.errorContainer}>
+                        <FormHelperText
+                          id="ingredients-error"
+                          variant="filled"
+                          margin="dense"
+                          className={classes.errorMsg}
+                        >
+                          {ingredientsError}
+                        </FormHelperText>
+                      </div>)
+                    }
+                  </div>
                 )}
               <Fab
                 color="primary"

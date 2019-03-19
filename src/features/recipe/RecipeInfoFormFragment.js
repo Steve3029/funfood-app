@@ -16,7 +16,30 @@ const categoryRange = [
     value: "category 3",
     label: "category 3",
   }
-]
+];
+
+const numberToServe = [
+  {
+    value: 1,
+    label: "1"
+  },
+  {
+    value: 2,
+    label: "2"
+  },
+  {
+    value: 3,
+    label: "3"
+  },
+  {
+    value: 4,
+    label: "4"
+  },
+  {
+    value: 5,
+    label: "5"
+  },
+];
 
 const styles = theme => ({
   selectEls: {
@@ -44,6 +67,10 @@ const styles = theme => ({
 class RecipeInfoFormFragment extends Component {
   static propTypes = {
 
+  };
+
+  handleChange = name => event => {
+    this.props.setFieldValue(name, event.target.value);
   };
 
   render() {
@@ -128,12 +155,11 @@ class RecipeInfoFormFragment extends Component {
               select
               className={classNames(classes.selectField, classes.fieldMargin)}
               variant="outlined"
-              label="choose catetory"
-              value="category 1"
+              label="serve"
             >
-              {categoryRange.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {numberToServe.map(item => (
+                <MenuItem key={item.value} value={item.value}>
+                  {item.label}
                 </MenuItem>
               ))}
             </TextField>
