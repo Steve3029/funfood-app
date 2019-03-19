@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, IconButton, Fab, Grid } from '@material-ui/core';
+import { TextField, IconButton, Fab, Grid, FormHelperText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DragIndicator from '@material-ui/icons/DragIndicator';
 import withDnD from './withDnD';
 import { FieldArray, getIn } from 'formik';
 import UploadImages from './UploadImages';
-
-const validationSchema = {
-  
-}
 
 const styles = theme => ({
   root: {
@@ -34,6 +30,16 @@ const styles = theme => ({
     bottom: 0,
     background: "rgba(0,0,0,0)",
   },
+  errorContainer: {
+    backgroundColor: theme.palette.error.dark,
+    borderRadius: 3,
+  },
+  errorMsg: {
+    marginBottom: theme.spacing.unit * 2,
+    fontSize: 20,
+    padding: 7,
+    color: theme.palette.getContrastText(theme.palette.error.dark),
+  }
 });
 
 
@@ -75,6 +81,10 @@ class RecipeCookStepsFormFragment extends Component {
       errors,
       touched, 
     } = this.props;
+
+    const cookstepsError = typeof errors.cookSteps === 'string' 
+      ? errors.cookSteps 
+      : null;
 
     return (
       <div>
@@ -139,7 +149,22 @@ class RecipeCookStepsFormFragment extends Component {
                   </div>
                 ))
               ) : (
-                  <h3>There is not any cook step yet. Press below button to add one.</h3>
+                  <div>
+                    <h3>There is not any cook step yet. Press below button to add one.</h3>
+                    {cookstepsError
+                      &&
+                      (<div className={classes.errorContainer}>
+                        <FormHelperText
+                          id="ingredients-error"
+                          variant="filled"
+                          margin="dense"
+                          className={classes.errorMsg}
+                        >
+                          {cookstepsError}
+                        </FormHelperText>
+                      </div>)
+                    }
+                  </div>
                 )}
               <Fab
                 color="primary"
