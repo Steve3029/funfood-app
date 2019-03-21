@@ -75,6 +75,12 @@ class EditRecipe extends Component {
     );
   };
 
+  handleSubmitTest = values => {
+    console.log("entry submit function...")
+    console.log(values);
+    return;
+  };
+
   render() {
     const { classes, handleSubmit, initialValues } = this.props;
     return (
@@ -87,7 +93,7 @@ class EditRecipe extends Component {
         <Grid item xs={6}>
           <div className={classes.root}>
             <Formik
-              onSubmit={handleSubmit} 
+              onSubmit={this.handleSubmitTest} 
               validationSchema={recipeFormValidationSchema}
               render={props => this.renderForm(props)}
             />

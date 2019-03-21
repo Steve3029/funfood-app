@@ -75,8 +75,8 @@ class UploadImages extends Component {
           uploading: false,
           image: res.data,
         });
-        this.props.index ?
-          this.props.callBack(res.data.secure_url, this.props.index) :
+        this.props.index !== null ? 
+          this.props.callBack(res.data.secure_url, this.props.index) : 
           this.props.callBack(res.data.secure_url);
       },
 
@@ -100,7 +100,7 @@ class UploadImages extends Component {
           removing: false,
           image: null
         });
-        this.props.index ?
+        this.props.index !== null ?
           this.props.callBack(null, this.props.index) :
           this.props.callBack(null);
       },

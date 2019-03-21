@@ -79,7 +79,8 @@ class RecipeInfoFormFragment extends Component {
       errors, 
       touched, 
       handleChange, 
-      handleBlur 
+      handleBlur,
+      values 
     } = this.props;
     return (
       <div>
@@ -90,6 +91,7 @@ class RecipeInfoFormFragment extends Component {
             size="large"
             color="primary"
             className={classes.margin}
+            type="submit"
           >
             Create
           </Button>
@@ -113,6 +115,7 @@ class RecipeInfoFormFragment extends Component {
             required
             variant="outlined"
             placeholder="Enter a title here for new recipe"
+            value={values.title}
             className={classes.fieldMargin}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -129,6 +132,7 @@ class RecipeInfoFormFragment extends Component {
             margin="normal"
             variant="outlined"
             placeholder="Enter a subtitle here like 'with onien and wine'"
+            value={values.subtitle}
             className={classes.fieldMargin}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -137,12 +141,14 @@ class RecipeInfoFormFragment extends Component {
           />
           <div className={classes.selectEls}>
             <TextField
-              id="catetory"
+              id="category"
+              name="category"
               select
               className={classNames(classes.selectField, classes.fieldMargin)}
               variant="outlined"
-              label="choose catetory"
-              value="category 1"
+              label="Choose Category"
+              value={values.category}
+              onChange={this.handleChange('category')}
             >
               {categoryRange.map(option => (
                 <MenuItem key={option.value} value={option.value}>
@@ -156,6 +162,8 @@ class RecipeInfoFormFragment extends Component {
               className={classNames(classes.selectField, classes.fieldMargin)}
               variant="outlined"
               label="serve"
+              value={values.serve}
+              onChange={this.handleChange('serve')}
             >
               {numberToServe.map(item => (
                 <MenuItem key={item.value} value={item.value}>

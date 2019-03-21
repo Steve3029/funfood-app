@@ -51,7 +51,7 @@ class RecipeCookStepsFormFragment extends Component {
   };
 
   updateImage = (secureUrl, index) => {
-    let arr = this.props.cookSteps.slice();
+    let arr = this.props.values.cookSteps.slice();
     arr[index].shotcut = secureUrl;
     this.props.setFieldValue("cookSteps", arr);
   };
