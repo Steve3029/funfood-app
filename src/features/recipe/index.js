@@ -1,5 +1,4 @@
 export { default as DefaultPage } from './DefaultPage';
-export { default as EditRecipe } from './EditRecipe';
 export { default as UploadImages } from './UploadImages';
 export { default as ImageUploadButton } from './ImageUploadButton';
 export { default as ImageUploadPreview } from './ImageUploadPreview';
@@ -8,3 +7,4 @@ export { default as RecipeCoverFormFragment } from './RecipeCoverFormFragment';
 export { default as RecipeIngredientsFormFragment } from './RecipeIngredientsFormFragment';
 export { default as RecipeCookStepsFormFragment } from './RecipeCookStepsFormFragment';
 export { default as MessageDialogFrame } from './MessageDialogFrame';
+export { default as RecipeForm } from './RecipeForm';

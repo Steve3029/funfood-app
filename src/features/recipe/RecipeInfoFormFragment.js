@@ -3,21 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { Button, TextField, MenuItem } from '@material-ui/core';
 
-const categoryRange = [
-  {
-    value: "category 1",
-    label: "category 1",
-  },
-  {
-    value: "category 2",
-    label: "category 2",
-  },
-  {
-    value: "category 3",
-    label: "category 3",
-  }
-];
-
 const numberToServe = [
   {
     value: 1,
@@ -80,7 +65,8 @@ class RecipeInfoFormFragment extends Component {
       touched, 
       handleChange, 
       handleBlur,
-      values 
+      values,
+      categories, 
     } = this.props;
     return (
       <div>
@@ -150,7 +136,7 @@ class RecipeInfoFormFragment extends Component {
               value={values.category}
               onChange={this.handleChange('category')}
             >
-              {categoryRange.map(option => (
+              {categories.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

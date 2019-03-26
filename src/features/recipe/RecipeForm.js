@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from './redux/actions';
 import { withStyles } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 import { Grid } from '@material-ui/core';
@@ -58,16 +61,25 @@ const recipeFormValidationSchema = yup.object().shape({
     .min(3, 'Minimum of 3 steps.')
 });
 
-class EditRecipe extends Component {
+class RecipeForm extends Component {
   static propTypes = {
+    recipe: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
     // handleSubmit: PropTypes.func.isRequired,
     // initialValues: PropTypes.object,
   };
 
+  componentDidMount() {
+    const categories = this.props.recipe.recipeCategories;
+    if(categories === null) {
+      this.actions.FetchCategories();
+    }
+  }
+
   renderForm = properties => {
     return (
       <Form>
-        <RecipeInfo {...properties} />
+        <RecipeInfo {...properties} categories={this.props.recipeCategories} />
         <RecipeCover {...properties} />
         <RecipeIngredients {...properties} />
         <RecipeCookSteps {...properties} />
@@ -104,4 +116,21 @@ class EditRecipe extends Component {
   }
 }
 
-export default withStyles(styles)(EditRecipe);
+/* istanbul ignore next */
+function mapStateToProps(state) {
+  return {
+    recipe: state.recipe,
+  };
+}
+
+/* istanbul ignore next */
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(RecipeForm));
