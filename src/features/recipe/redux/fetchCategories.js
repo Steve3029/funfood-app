@@ -69,7 +69,7 @@ export function reducer(state, action) {
       // The request is success
       return {
         ...state,
-        recipeCategories: action.data,
+        recipeCategories: (action.data == null || action.data === '') ? null : action.data,
         fetchCategoriesPending: false,
         fetchCategoriesError: null,
       };

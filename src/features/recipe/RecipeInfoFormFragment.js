@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from './redux/actions';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { Button, TextField, MenuItem } from '@material-ui/core';
@@ -51,22 +55,30 @@ const styles = theme => ({
 
 class RecipeInfoFormFragment extends Component {
   static propTypes = {
-
+    recipe: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
   };
+
+  componentDidMount() {
+    const categories = this.props.recipe.recipeCategories;
+    if(categories == null) {
+      this.props.actions.fetchCategories();
+    }
+  }
 
   handleChange = name => event => {
     this.props.setFieldValue(name, event.target.value);
   };
 
   render() {
+    const categories = this.props.recipe.recipeCategories;
     const { 
       classes, 
       errors, 
       touched, 
       handleChange, 
       handleBlur,
-      values,
-      categories, 
+      values, 
     } = this.props;
     return (
       <div>
@@ -136,9 +148,9 @@ class RecipeInfoFormFragment extends Component {
               value={values.category}
               onChange={this.handleChange('category')}
             >
-              {categories.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {categories && categories.map(option => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -180,4 +192,22 @@ class RecipeInfoFormFragment extends Component {
   }
 }
 
-export default withStyles(styles)(RecipeInfoFormFragment);
+/* istanbul ignore next */
+function mapStateToProps(state) {
+  return {
+    recipe: state.recipe,
+  };
+}
+
+/* istanbul ignore next */
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(RecipeInfoFormFragment));
+
