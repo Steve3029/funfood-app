@@ -68,7 +68,7 @@ class UploadImages extends Component {
     const formData = new FormData();
     formData.append("image", image);
     this.setState({ uploading: true });
-    const doRequest = axios.post("https://localhost:5001/api/v1/images/upload", formData);
+    const doRequest = axios.post("/images/upload", formData);
     doRequest.then(
       (res) => {
         this.setState({
@@ -91,7 +91,7 @@ class UploadImages extends Component {
     if (id == null || id === "")
       return;
 
-    const requestPath = "https://localhost:5001/api/v1/images/destroy?desc=" + id;
+    const requestPath = "/images/destroy?desc=" + id;
     const doRequest = axios.get(requestPath);
     this.setState({ removing: true });
     doRequest.then(

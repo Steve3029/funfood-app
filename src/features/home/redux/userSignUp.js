@@ -23,14 +23,14 @@ export function userSignUp(userInfo) {
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
       
-      const doRequest = axios.post('https://localhost:5001/api/v1/identity/signup', userInfo);
+      const doRequest = axios.post('/identity/signup', userInfo);
       doRequest.then(
         (res) => {
           dispatch({
             type: HOME_USER_SIGN_UP_SUCCESS,
             data: res.data,
           });
-          localStorage.setItem('funfood-token', res.data.token);
+          localStorage.setItem('access-token', res.data.token);
           resolve(res);
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.

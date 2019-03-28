@@ -4,8 +4,11 @@ import { render } from 'react-dom';
 import configStore from './common/configStore';
 import routeConfig from './common/routeConfig';
 import Root from './Root';
+import axios from 'axios';
 
 const store = configStore();
+axios.defaults.baseURL = "https://localhost:5001/api/v1";
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access-token');
 
 function renderApp(app) {
   render(

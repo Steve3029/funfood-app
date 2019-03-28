@@ -15,6 +15,7 @@ export function userLogout() {
 export function reducer(state, action) {
   switch (action.type) {
     case HOME_USER_LOGOUT:
+      localStorage.removeItem('access-token');
       return {
         ...state,
         isSignIn: false,

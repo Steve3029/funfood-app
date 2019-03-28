@@ -22,14 +22,14 @@ export function userSignIn(userInfo) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const doRequest = axios.post('https://localhost:5001/api/v1/identity/signin', userInfo);
+      const doRequest = axios.post('/identity/signin', userInfo);
       doRequest.then(
         (res) => {
           dispatch({
             type: HOME_USER_SIGN_IN_SUCCESS,
             data: res.data,
           });
-          localStorage.setItem('funfood-token', res.data.token);
+          localStorage.setItem('access-token', res.data.token);
           resolve(res);
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.
