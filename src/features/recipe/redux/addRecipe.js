@@ -1,16 +1,17 @@
 import {
-  RECIPE_EDIT_RECIPE_BEGIN,
-  RECIPE_EDIT_RECIPE_SUCCESS,
-  RECIPE_EDIT_RECIPE_FAILURE,
-  RECIPE_EDIT_RECIPE_DISMISS_ERROR,
+  RECIPE_ADD_RECIPE_BEGIN,
+  RECIPE_ADD_RECIPE_SUCCESS,
+  RECIPE_ADD_RECIPE_FAILURE,
+  RECIPE_ADD_RECIPE_DISMISS_ERROR,
 } from './constants';
+import axios from 'axios';
 
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-export function editRecipe(args = {}) {
+export function addRecipe(recipe) {
   return (dispatch) => { // optionally you can have getState as the second argument
     dispatch({
-      type: RECIPE_EDIT_RECIPE_BEGIN,
+      type: RECIPE_ADD_RECIPE_BEGIN,
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -21,11 +22,11 @@ export function editRecipe(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const doRequest = args.error ? Promise.reject(new Error()) : Promise.resolve();
+      const doRequest = axios.post("/recipe/add", recipe);
       doRequest.then(
         (res) => {
           dispatch({
-            type: RECIPE_EDIT_RECIPE_SUCCESS,
+            type: RECIPE_ADD_RECIPE_SUCCESS,
             data: res,
           });
           resolve(res);
@@ -33,7 +34,7 @@ export function editRecipe(args = {}) {
         // Use rejectHandler as the second argument so that render errors won't be caught.
         (err) => {
           dispatch({
-            type: RECIPE_EDIT_RECIPE_FAILURE,
+            type: RECIPE_ADD_RECIPE_FAILURE,
             data: { error: err },
           });
           reject(err);
@@ -47,43 +48,43 @@ export function editRecipe(args = {}) {
 
 // Async action saves request error by default, this method is used to dismiss the error info.
 // If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissEditRecipeError() {
+export function dismissAddRecipeError() {
   return {
-    type: RECIPE_EDIT_RECIPE_DISMISS_ERROR,
+    type: RECIPE_ADD_RECIPE_DISMISS_ERROR,
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case RECIPE_EDIT_RECIPE_BEGIN:
+    case RECIPE_ADD_RECIPE_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        editRecipePending: true,
-        editRecipeError: null,
+        addRecipePending: true,
+        addRecipeError: null,
       };
 
-    case RECIPE_EDIT_RECIPE_SUCCESS:
+    case RECIPE_ADD_RECIPE_SUCCESS:
       // The request is success
       return {
         ...state,
-        editRecipePending: false,
-        editRecipeError: null,
+        addRecipePending: false,
+        addRecipeError: null,
       };
 
-    case RECIPE_EDIT_RECIPE_FAILURE:
+    case RECIPE_ADD_RECIPE_FAILURE:
       // The request is failed
       return {
         ...state,
-        editRecipePending: false,
-        editRecipeError: action.data.error,
+        addRecipePending: false,
+        addRecipeError: action.data.error,
       };
 
-    case RECIPE_EDIT_RECIPE_DISMISS_ERROR:
+    case RECIPE_ADD_RECIPE_DISMISS_ERROR:
       // Dismiss the request failure error
       return {
         ...state,
-        editRecipeError: null,
+        addRecipeError: null,
       };
 
     default:

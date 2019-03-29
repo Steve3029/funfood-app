@@ -59,6 +59,12 @@ class RecipeInfoFormFragment extends Component {
     actions: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.handleChange.bind(this);
+  }
+
   componentDidMount() {
     const categories = this.props.recipe.recipeCategories;
     if(categories == null) {
@@ -66,9 +72,11 @@ class RecipeInfoFormFragment extends Component {
     }
   }
 
-  handleChange = name => event => {
-    this.props.setFieldValue(name, event.target.value);
-  };
+  handleChange(name) {
+    return event => {
+      this.props.setFieldValue(name, event.target.value);
+    }
+  }
 
   render() {
     const categories = this.props.recipe.recipeCategories;

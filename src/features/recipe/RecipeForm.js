@@ -75,11 +75,6 @@ class RecipeForm extends Component {
     );
   };
 
-  handleSubmitTest = values => {
-    console.log(values);
-    return;
-  };
-
   render() {
     const { classes, handleSubmit, initialValues } = this.props;
     return (
@@ -92,7 +87,7 @@ class RecipeForm extends Component {
         <Grid item xs={6}>
           <div className={classes.root}>
             <Formik
-              onSubmit={this.handleSubmitTest} 
+              onSubmit={handleSubmit} 
               validationSchema={recipeFormValidationSchema}
               render={props => this.renderForm(props)}
             />

@@ -7,12 +7,12 @@
 // https://medium.com/@nate_wang/a-new-approach-for-managing-redux-actions-91c26ce8b5da.
 
 import initialState from './initialState';
-import { reducer as editRecipeReducer } from './editRecipe';
 import { reducer as fetchCategoriesReducer } from './fetchCategories';
+import { reducer as addRecipeReducer } from './addRecipe';
 
 const reducers = [
-  editRecipeReducer,
   fetchCategoriesReducer,
+  addRecipeReducer,
 ];
 
 export default function reducer(state = initialState, action) {

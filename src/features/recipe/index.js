@@ -8,3 +8,4 @@ export { default as RecipeCookStepsFormFragment } from './RecipeCookStepsFormFra
 export { default as MessageDialogFrame } from './MessageDialogFrame';
 export { default as RecipeForm } from './RecipeForm';
 export { default as RecipeInfoFormFragment } from './RecipeInfoFormFragment';
+export { default as AddNewRecipe } from './AddNewRecipe';
