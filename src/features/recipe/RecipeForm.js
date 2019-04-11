@@ -60,7 +60,7 @@ const recipeFormValidationSchema = yup.object().shape({
 
 class RecipeForm extends Component {
   static propTypes = {
-    // handleSubmit: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     // initialValues: PropTypes.object,
   };
 

@@ -80,6 +80,7 @@ class RecipeCookStepsFormFragment extends Component {
       handleBlur,
       errors,
       touched, 
+      setFieldValue,
     } = this.props;
 
     const cookstepsError = typeof errors.cookSteps === 'string' 

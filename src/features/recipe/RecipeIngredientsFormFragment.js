@@ -43,17 +43,24 @@ class RecipeIngredientsFormFragment extends Component {
 
   };
 
-  getErrorMsg = (errors, touched, name) => {
+  constructor(props) {
+    super(props);
+
+    this.getErrorMsg = this.getErrorMsg.bind(this);
+    this.hasError = this.hasError.bind(this);
+  }
+
+  getErrorMsg(errors, touched, name) {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
     return touch && error ? error : null;
-  };
+  }
 
-  hasError = (errors, touched, name) => {
+  hasError(errors, touched, name) {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
     return touch && error ? true : false;
-  };
+  }
 
   render() {
     const {
@@ -67,6 +74,7 @@ class RecipeIngredientsFormFragment extends Component {
       handleBlur,
       errors,
       touched,
+      setFieldValue,
     } = this.props;
 
     const ingredientsError = typeof errors.ingredients === 'string'

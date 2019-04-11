@@ -14,11 +14,12 @@ export class AddNewRecipe extends Component {
   constructor(props) {
     super(props);
 
-    this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(values) {
     console.log(values);
+    this.props.actions.addRecipe(values);
   }
 
   render() {

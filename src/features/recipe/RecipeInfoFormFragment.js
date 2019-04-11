@@ -62,7 +62,7 @@ class RecipeInfoFormFragment extends Component {
   constructor(props) {
     super(props);
 
-    this.handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -147,14 +147,14 @@ class RecipeInfoFormFragment extends Component {
           />
           <div className={classes.selectEls}>
             <TextField
-              id="category"
-              name="category"
+              id="categoryId"
+              name="categoryId"
               select
               className={classNames(classes.selectField, classes.fieldMargin)}
               variant="outlined"
               label="Choose Category"
-              value={values.category}
-              onChange={this.handleChange('category')}
+              value={values.categoryId}
+              onChange={this.handleChange('categoryId')}
             >
               {categories && categories.map(option => (
                 <MenuItem key={option.id} value={option.id}>

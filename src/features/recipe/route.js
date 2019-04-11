@@ -74,6 +74,6 @@ export default {
   name: 'Recipe',
   childRoutes: [
     { path: '/recipe', name: 'Recipe form', component: RecipeForm },
-    { path: 'recipe/add', name: 'Add new recipe', component: AddNewRecipe },
+    { path: 'add', name: 'Add new recipe', component: AddNewRecipe },
   ],
 };
