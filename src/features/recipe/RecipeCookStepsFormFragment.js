@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, IconButton, Fab, Grid, FormHelperText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -47,26 +48,58 @@ const styles = theme => ({
 
 class RecipeCookStepsFormFragment extends Component {
   static propTypes = {
-
+    classes: PropTypes.object.isRequired, 
+    values: PropTypes.object, 
+    handleMouseDown: PropTypes.func.isRequired, 
+    handleMouseMove: PropTypes.func.isRequired,
+    handleMouseUp: PropTypes.func.isRequired,
+    getDraggingStyle: PropTypes.func.isRequired, 
+    handleChange: PropTypes.func.isRequired, 
+    handleBlur: PropTypes.func.isRequired,
+    errors: PropTypes.object,
+    touched: PropTypes.bool, 
+    setFieldValue: PropTypes.func.isRequired,
   };
 
-  updateImage = (secureUrl, index) => {
-    let arr = this.props.values.cookSteps.slice();
-    arr[index].shotcut = secureUrl;
-    this.props.setFieldValue("cookSteps", arr);
+  static defaultProps = {
+    classes: {},
+    values: {},
+    handleMouseDown: undefined,
+    handleMouseUp: undefined,
+    handleMouseMove: undefined,
+    getDraggingStyle: undefined,
+    handleChange: undefined,
+    handleBlur: undefined,
+    errors: undefined,
+    touched: false,
+    setFieldValue: undefined,
   };
 
-  getErrorMsg = (errors, touched, name) => {
+  constructor(props) {
+    super(props);
+
+    this.updateImage = this.updateImage.bind(this);
+    this.getErrorMsg = this.getErrorMsg.bind(this);
+    this.hasError = this.hasError.bind(this);
+  }
+
+  updateImage(secureUrl, index) {
+    let arr = this.props.values.instructions.slice();
+    arr[index].imageUrl = secureUrl;
+    this.props.setFieldValue("instructions", arr);
+  }
+
+  getErrorMsg(errors, touched, name) {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
     return touch && error ? error : null;
-  };
+  }
 
-  hasError = (errors, touched, name) => {
+  hasError(errors, touched, name) {
     const error = getIn(errors, name);
     const touch = getIn(touched, name);
     return touch && error ? true : false;
-  };
+  }
 
   render() {
     const { 
@@ -80,21 +113,20 @@ class RecipeCookStepsFormFragment extends Component {
       handleBlur,
       errors,
       touched, 
-      setFieldValue,
     } = this.props;
 
-    const cookstepsError = typeof errors.cookSteps === 'string' 
-      ? errors.cookSteps 
+    const instructionsError = typeof errors.instructions === 'string' 
+      ? errors.instructions 
       : null;
 
     return (
       <div>
         <FieldArray
-          name="cookSteps"
+          name="instructions"
           render={arrayHelpers => (
             <div>
-              {values.cookSteps && values.cookSteps.length > 0 ? (
-                values.cookSteps.map((cookStep, index) => (
+              {values.instructions && values.instructions.length > 0 ? (
+                values.instructions.map((instruction, index) => (
                   <div
                     key={index}
                     style={getDraggingStyle(index)}
@@ -102,21 +134,21 @@ class RecipeCookStepsFormFragment extends Component {
                   >
                     <Grid className={classes.gridWrap} container spacing={8}>
                       <Grid item xs={4}>
-                        <UploadImages idName={`cookStep-${index}`} index={index} size="small" callBack={this.updateImage} />
+                        <UploadImages idName={`instruction-${index}`} index={index} size="small" callBack={this.updateImage} />
                         <input
-                          id={`cookSteps[${index}].shotcut`}
-                          name={`cookSteps[${index}].shotcut`}
+                          id={`instructions[${index}].imageUrl`}
+                          name={`instructions[${index}].imageUrl`}
                           hidden
                           type="text"
-                          value={cookStep.shotcut}
+                          value={instruction.imageUrl}
                           onChange={handleChange}
                         />
                       </Grid>
                       <Grid item xs={6}>
                         <TextField
-                          id={`cookSteps[${index}].instruction`}
-                          name={`cookSteps[${index}].instruction`}
-                          value={cookStep.instruction}
+                          id={`instructions[${index}].description`}
+                          name={`instructions[${index}].description`}
+                          value={instruction.description}
                           className={classes.textFieldMargin}
                           label="Description"
                           multiline
@@ -128,8 +160,8 @@ class RecipeCookStepsFormFragment extends Component {
                           variant="outlined"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          helperText={this.getErrorMsg(errors, touched, `cookSteps[${index}].instruction`)}
-                          error={this.hasError(errors, touched, `cookSteps[${index}].instruction`)}
+                          helperText={this.getErrorMsg(errors, touched, `instructions[${index}].description`)}
+                          error={this.hasError(errors, touched, `instructions[${index}].description`)}
                         />
                       </Grid>
                       <Grid item xs={2}>
@@ -152,7 +184,7 @@ class RecipeCookStepsFormFragment extends Component {
               ) : (
                   <div>
                     <h3>There is not any cook step yet. Press below button to add one.</h3>
-                    {cookstepsError
+                    {instructionsError
                       &&
                       (<div className={classes.errorContainer}>
                         <FormHelperText
@@ -161,7 +193,7 @@ class RecipeCookStepsFormFragment extends Component {
                           margin="dense"
                           className={classes.errorMsg}
                         >
-                          {cookstepsError}
+                          {instructionsError}
                         </FormHelperText>
                       </div>)
                     }
@@ -171,7 +203,7 @@ class RecipeCookStepsFormFragment extends Component {
                 color="primary"
                 aria-label="Add"
                 className={classes.fab}
-                onClick={() => arrayHelpers.push({ shotcut: '', instruction: '' })}
+                onClick={() => arrayHelpers.push({ imageUrl: '', description: '' })}
               >
                 <AddIcon />
               </Fab>
@@ -190,4 +222,4 @@ class RecipeCookStepsFormFragment extends Component {
   }
 }
 
-export default withStyles(styles)(withDnD(RecipeCookStepsFormFragment, "cookSteps"));
+export default withStyles(styles)(withDnD(RecipeCookStepsFormFragment, "instructions"));

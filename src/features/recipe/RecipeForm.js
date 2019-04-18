@@ -46,16 +46,16 @@ const recipeFormValidationSchema = yup.object().shape({
     )
     .required('Must have some ingerident.')
     .min(3, 'Minimum of 3 ingeridents.'),
-  cookSteps: yup.array()
+  instructions: yup.array()
     .of(
       yup.object().shape({
-        instruction: yup.string()
+        description: yup.string()
           .max(200, 'Maxmum of 200 characters.')
-          .required('Instruction is required.')
+          .required('description is required.')
       })
     )
-    .required('Must have some cooking steps.')
-    .min(3, 'Minimum of 3 steps.')
+    .required('Must have some instructions.')
+    .min(3, 'Minimum of 3 instructions.')
 });
 
 class RecipeForm extends Component {

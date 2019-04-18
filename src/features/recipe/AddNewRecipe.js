@@ -18,7 +18,6 @@ export class AddNewRecipe extends Component {
   }
 
   handleSubmit(values) {
-    console.log(values);
     this.props.actions.addRecipe(values);
   }
 
